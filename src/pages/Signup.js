@@ -13,9 +13,7 @@ import { toast } from "react-hot-toast";
 const Signup = () => {
   const { handleSubmit, register, reset, control } = useForm();
   const [disabled, setDisabled] = useState(true);
-  const { email, isLoading, isError, error } = useSelector(
-    (state) => state.auth
-  );
+  const { email, isError, error } = useSelector((state) => state.auth);
 
   const password = useWatch({ control, name: "password" });
   const confirmPassword = useWatch({ control, name: "confirmPassword" });

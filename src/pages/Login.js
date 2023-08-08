@@ -8,9 +8,7 @@ import { toast } from "react-hot-toast";
 
 const Login = () => {
   const { register, handleSubmit, reset } = useForm();
-  const { email, isLoading, isError, error } = useSelector(
-    (state) => state.auth
-  );
+  const { email, isError, error } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
