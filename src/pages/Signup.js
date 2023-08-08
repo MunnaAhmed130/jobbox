@@ -3,12 +3,19 @@ import loginImage from "../assets/login.svg";
 import { useForm, useWatch } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { createUser, googleLogin } from "../features/auth/authSlice";
+import {
+  clearError,
+  createUser,
+  googleLogin,
+} from "../features/auth/authSlice";
+import { toast } from "react-hot-toast";
 
 const Signup = () => {
   const { handleSubmit, register, reset, control } = useForm();
   const [disabled, setDisabled] = useState(true);
-  const { email } = useSelector((state) => state.auth);
+  const { email, isLoading, isError, error } = useSelector(
+    (state) => state.auth
+  );
 
   const password = useWatch({ control, name: "password" });
   const confirmPassword = useWatch({ control, name: "confirmPassword" });
@@ -36,16 +43,22 @@ const Signup = () => {
   }, [password, confirmPassword]);
 
   useEffect(() => {
-    if (email) {
+    if (email && !isError) {
+      reset();
       navigate("/");
+      toast.success("Sign up successful", { id: "signup" });
     }
-  }, [email]);
+    if (isError) {
+      toast.error(error, { id: "signup" });
+      dispatch(clearError());
+    }
+  }, [email, isError, error]);
 
   const onSubmit = (data) => {
-    console.log(data);
+    // console.log(data);
     const { email, password } = data;
     dispatch(createUser({ email, password }));
-    reset();
+    // reset();
   };
 
   return (
@@ -92,6 +105,7 @@ const Signup = () => {
                 />
               </div>
               <div className="!mt-8 ">
+                {/* {isError && <span className="break-words">{error}</span>} */}
                 <button
                   type="submit"
                   className="font-bold text-white py-3 rounded-full bg-primary w-full disabled:bg-gray-300 disabled:cursor-not-allowed"

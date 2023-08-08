@@ -3,11 +3,14 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import loginImage from "../assets/login.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { googleLogin, loginUser } from "../features/auth/authSlice";
+import { clearError, googleLogin, loginUser } from "../features/auth/authSlice";
+import { toast } from "react-hot-toast";
 
 const Login = () => {
   const { register, handleSubmit, reset } = useForm();
-  const { email, isLoading } = useSelector((state) => state.auth);
+  const { email, isLoading, isError, error } = useSelector(
+    (state) => state.auth
+  );
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -15,7 +18,7 @@ const Login = () => {
   const onSubmit = (data) => {
     // console.log(data);
     dispatch(loginUser(data));
-    reset();
+    // reset();
   };
 
   const handleGoogleLogin = () => {
@@ -23,10 +26,16 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (email) {
+    if (email && !isError) {
+      reset();
       navigate("/");
+      toast.success("Welcome to Jobbox", { id: "login" });
     }
-  }, [email]);
+    if (isError) {
+      toast.error(error, { id: "login" });
+      dispatch(clearError());
+    }
+  }, [email, isError, error]);
 
   return (
     <div className="flex h-screen items-center">
@@ -54,6 +63,9 @@ const Login = () => {
                   {...register("password")}
                 />
               </div>
+
+              {/* {isError && <p className="text-red-500">{error}</p>} */}
+
               <div className="relative !mt-8">
                 <button
                   type="Submit"
