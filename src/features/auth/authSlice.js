@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 import auth from "../../firebase/firebase.config";
 
@@ -29,6 +31,12 @@ export const loginUser = createAsyncThunk(
     return data.user.email;
   }
 );
+
+export const googleLogin = createAsyncThunk("auth/googleLogin", async () => {
+  const googleProvider = new GoogleAuthProvider();
+  const data = await signInWithPopup(auth, googleProvider);
+  return data.user.email;
+});
 
 export const authSlice = createSlice({
   name: "auth",
@@ -73,6 +81,23 @@ export const authSlice = createSlice({
         state.email = action.payload;
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.email = "";
+        state.isError = true;
+        state.error = action.error.message;
+      })
+      .addCase(googleLogin.pending, (state) => {
+        state.isLoading = true;
+        state.isError = false;
+        state.error = "";
+      })
+      .addCase(googleLogin.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.error = "";
+        state.email = action.payload;
+      })
+      .addCase(googleLogin.rejected, (state, action) => {
         state.isLoading = false;
         state.email = "";
         state.isError = true;
