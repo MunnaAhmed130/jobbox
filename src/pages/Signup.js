@@ -13,7 +13,9 @@ import { toast } from "react-hot-toast";
 const Signup = () => {
   const { handleSubmit, register, reset, control } = useForm();
   const [disabled, setDisabled] = useState(true);
-  const { email, isError, error } = useSelector((state) => state.auth);
+  const { email, isLoading, isError, error } = useSelector(
+    (state) => state.auth
+  );
 
   const password = useWatch({ control, name: "password" });
   const confirmPassword = useWatch({ control, name: "confirmPassword" });
@@ -41,16 +43,20 @@ const Signup = () => {
   }, [password, confirmPassword]);
 
   useEffect(() => {
+    if (isLoading) {
+      toast.loading("Signing up....", { id: "signup" });
+    }
+
     if (email && !isError) {
       reset();
-      navigate("/");
+      navigate("/register");
       toast.success("Sign up successful", { id: "signup" });
     }
     if (isError) {
       toast.error(error, { id: "signup" });
       dispatch(clearError());
     }
-  }, [email, isError, error]);
+  }, [email, isError, isLoading, error]);
 
   const onSubmit = (data) => {
     // console.log(data);
