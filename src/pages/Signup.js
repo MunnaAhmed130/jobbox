@@ -34,6 +34,7 @@ const Signup = () => {
     console.log(data);
     const { email, password } = data;
     dispatch(createUser({ email, password }));
+    reset();
   };
 
   return (
