@@ -43,15 +43,16 @@ const Signup = () => {
   }, [password, confirmPassword]);
 
   useEffect(() => {
-    if (isLoading) {
-      toast.loading("Signing up....", { id: "signup" });
-    }
+    // if (isLoading) {
+    //   toast.loading("Signing up....", { id: "signup" });
+    // }
 
     if (email && !isError) {
       reset();
       navigate("/register");
       toast.success("Sign up successful", { id: "signup" });
     }
+
     if (isError) {
       toast.error(error, { id: "signup" });
       dispatch(clearError());

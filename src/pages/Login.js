@@ -8,7 +8,7 @@ import { toast } from "react-hot-toast";
 
 const Login = () => {
   const { register, handleSubmit, reset } = useForm();
-  const { email, isLoading, isError, error } = useSelector(
+  const { email, isLoading, isError, error, role } = useSelector(
     (state) => state.auth
   );
 
@@ -26,19 +26,21 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (isLoading) {
-      toast.loading("Loggin in....", { id: "login" });
-    }
+    // if (isLoading) {
+    //   toast.loading("Loggin in....", { id: "login" });
+    // }
+
     if (email && !isError) {
       reset();
-      navigate("/");
       toast.success("Welcome to Jobbox", { id: "login" });
+      role ? navigate("/dashboard") : navigate("/register");
     }
+
     if (isError) {
       toast.error(error, { id: "login" });
       dispatch(clearError());
     }
-  }, [email, isError, isLoading, error]);
+  }, [email, isError, isLoading, error, role]);
 
   return (
     <div className="flex h-screen items-center">
