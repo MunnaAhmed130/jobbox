@@ -55,7 +55,7 @@ const Navbar = () => {
               className="border border-black px-3 py-1 rounded-full hover:border-primary hover:text-white hover:bg-primary hover:px-4 transition-all "
               to="/login"
             >
-              Register
+              Get started
             </Link>
           </li>
         )}
