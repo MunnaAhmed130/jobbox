@@ -13,7 +13,7 @@ import { toast } from "react-hot-toast";
 const Signup = () => {
   const { handleSubmit, register, reset, control } = useForm();
   const [disabled, setDisabled] = useState(true);
-  const { email, isLoading, isError, error } = useSelector(
+  const { email, authIsLoading, isError, error } = useSelector(
     (state) => state.auth
   );
 
@@ -43,9 +43,9 @@ const Signup = () => {
   }, [password, confirmPassword]);
 
   useEffect(() => {
-    // if (isLoading) {
-    //   toast.loading("Signing up....", { id: "signup" });
-    // }
+    if (authIsLoading) {
+      toast.loading("Signing up....", { id: "signup" });
+    }
 
     if (email && !isError) {
       reset();
@@ -57,7 +57,7 @@ const Signup = () => {
       toast.error(error, { id: "signup" });
       dispatch(clearError());
     }
-  }, [email, isError, isLoading, error]);
+  }, [email, isError, authIsLoading, error]);
 
   const onSubmit = (data) => {
     // console.log(data);

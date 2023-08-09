@@ -8,7 +8,7 @@ import { toast } from "react-hot-toast";
 
 const Login = () => {
   const { register, handleSubmit, reset } = useForm();
-  const { email, isLoading, isError, error, role } = useSelector(
+  const { email, authIsLoading, isError, error, role } = useSelector(
     (state) => state.auth
   );
 
@@ -26,9 +26,9 @@ const Login = () => {
   };
 
   useEffect(() => {
-    // if (isLoading) {
-    //   toast.loading("Loggin in....", { id: "login" });
-    // }
+    if (authIsLoading) {
+      toast.loading("Loggin in....", { id: "login" });
+    }
 
     if (email && !isError) {
       reset();
@@ -40,7 +40,7 @@ const Login = () => {
       toast.error(error, { id: "login" });
       dispatch(clearError());
     }
-  }, [email, isError, isLoading, error, role]);
+  }, [email, isError, authIsLoading, error, role]);
 
   return (
     <div className="flex h-screen items-center">
