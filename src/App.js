@@ -9,14 +9,17 @@ import { Toaster } from "react-hot-toast";
 
 function App() {
   const dispatch = useDispatch();
+
   // const user = useSelector((state) => state.auth.email);
   // console.log(user);
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         console.log(user);
         dispatch(setUser(user.email));
       } else {
+        // console.log("Loading false");
         dispatch(toggleLoading());
       }
     });
