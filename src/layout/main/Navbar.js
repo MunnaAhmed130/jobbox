@@ -32,14 +32,12 @@ const Navbar = () => {
         </li>
 
         {email ? (
-          <>
-            <button
-              onClick={handleSignOut}
-              className=" px-2 py-1 rounded-full hover:border-primary hover:text-white hover:bg-primary hover:px-4 transition-all"
-            >
-              LogOut
-            </button>
-          </>
+          <button
+            onClick={handleSignOut}
+            className=" px-2 py-1 rounded-full hover:border-primary hover:text-white hover:bg-primary hover:px-4 transition-all"
+          >
+            LogOut
+          </button>
         ) : (
           <li>
             <Link
