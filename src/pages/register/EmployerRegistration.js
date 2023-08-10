@@ -5,6 +5,11 @@ import { FaChevronLeft } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useRegisterMutation } from "../../features/auth/authApi";
 import { toast } from "react-hot-toast";
+import {
+  businessCategory,
+  employeeRange,
+  genderOption,
+} from "../../assets/constants";
 
 const EmployerRegistration = () => {
   const [countries, setCountries] = useState([]);
@@ -32,30 +37,6 @@ const EmployerRegistration = () => {
   const { handleSubmit, register, control } = useForm();
   const term = useWatch({ control, name: "term" });
   const navigate = useNavigate();
-
-  const businessCategory = [
-    "Automotive",
-    "Business Support & Supplies",
-    "Computers & Electronics",
-    "Construction & Contractors",
-    "Design Agency",
-    "Education",
-    "Entertainment",
-    "Food & Dining",
-    "Health & Medicine",
-    "Home & Garden",
-    "IT Farm",
-    "Legal & Financial",
-    "Manufacturing, Wholesale, Distribution",
-    "Merchants (Retail)",
-    "Miscellaneous",
-    "Personal Care & Services",
-    "Real Estate",
-    "Travel & Transportation",
-  ];
-
-  const employeeRange = ["1 - 10", "11 - 50", "51 - 100", "Above 100"];
-  const genderOption = ["male", "female", "other"];
 
   useEffect(() => {
     fetch("https://restcountries.com/v3.1/all")
