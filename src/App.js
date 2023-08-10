@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import auth from "./firebase/firebase.config";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser, setUser, toggleLoading } from "./features/auth/authSlice";
+import { getUser, toggleLoading } from "./features/auth/authSlice";
 import { Toaster } from "react-hot-toast";
 
 function App() {
