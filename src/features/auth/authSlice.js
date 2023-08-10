@@ -8,8 +8,7 @@ import {
 import auth from "../../firebase/firebase.config";
 
 const initialState = {
-  email: "",
-  role: "",
+  user: { email: "", role: "" },
   authIsLoading: false,
   isLoading: true,
   isError: false,
@@ -47,7 +46,7 @@ export const authSlice = createSlice({
       state.email = "";
     },
     setUser: (state, action) => {
-      state.email = action.payload;
+      state.user.email = action.payload;
       state.isLoading = false;
       state.authIsLoading = false;
     },
@@ -72,12 +71,12 @@ export const authSlice = createSlice({
         state.authIsLoading = false;
         state.isError = false;
         state.error = "";
-        state.email = action.payload;
+        state.user.email = action.payload;
       })
       .addCase(createUser.rejected, (state, action) => {
         state.isLoading = false;
         state.authIsLoading = false;
-        state.email = "";
+        state.user.email = "";
         state.isError = true;
         state.error = action.error.message;
       })
@@ -92,12 +91,12 @@ export const authSlice = createSlice({
         state.authIsLoading = false;
         state.isError = false;
         state.error = "";
-        state.email = action.payload;
+        state.user.email = action.payload;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
         state.authIsLoading = false;
-        state.email = "";
+        state.user.email = "";
         state.isError = true;
         state.error = action.error.message;
       })
@@ -112,12 +111,12 @@ export const authSlice = createSlice({
         state.authIsLoading = false;
         state.isError = false;
         state.error = "";
-        state.email = action.payload;
+        state.user.email = action.payload;
       })
       .addCase(googleLogin.rejected, (state, action) => {
         state.isLoading = false;
         state.authIsLoading = false;
-        state.email = "";
+        state.user.email = "";
         state.isError = true;
         state.error = action.error.message;
       });

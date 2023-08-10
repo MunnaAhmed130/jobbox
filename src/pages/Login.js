@@ -8,9 +8,12 @@ import { toast } from "react-hot-toast";
 
 const Login = () => {
   const { register, handleSubmit, reset } = useForm();
-  const { email, authIsLoading, isError, error, role } = useSelector(
-    (state) => state.auth
-  );
+  const {
+    user: { email, role },
+    authIsLoading,
+    isError,
+    error,
+  } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -31,8 +34,8 @@ const Login = () => {
     }
 
     if (email && !isError) {
-      reset();
       toast.success("Welcome to Jobbox", { id: "login" });
+      reset();
       role ? navigate("/dashboard") : navigate("/register");
     }
 
@@ -40,7 +43,7 @@ const Login = () => {
       toast.error(error, { id: "login" });
       dispatch(clearError());
     }
-  }, [email, isError, authIsLoading, error, role]);
+  }, [email, role, isError, authIsLoading, error]);
 
   return (
     <div className="flex h-screen items-center">
