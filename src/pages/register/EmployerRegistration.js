@@ -13,9 +13,6 @@ import {
 
 const EmployerRegistration = () => {
   const [countries, setCountries] = useState([]);
-  const { handleSubmit, register, control } = useForm();
-  const term = useWatch({ control, name: "term" });
-  const navigate = useNavigate();
 
   const {
     user: { email },
@@ -23,6 +20,13 @@ const EmployerRegistration = () => {
 
   const [postUser, { isLoading, isError, isSuccess, error }] =
     useRegisterMutation();
+
+  const { handleSubmit, register, control } = useForm({
+    defaultValues: { email },
+  });
+
+  const term = useWatch({ control, name: "term" });
+  const navigate = useNavigate();
 
   useEffect(() => {
     isLoading && toast.loading("Submitting form ...", { id: "emplyer" });
@@ -86,7 +90,7 @@ const EmployerRegistration = () => {
               type="email"
               id="email"
               disabled
-              defaultValue={email}
+              // defaultValue={email}
               {...register("email")}
             />
           </div>
