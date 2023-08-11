@@ -20,7 +20,7 @@ const businessCategory = [
 ];
 
 const employeeRange = ["1 - 10", "11 - 50", "51 - 100", "Above 100"];
-// const genderOption = ["male", "female", "other"];
+
 const genderOption = [
   { label: "Male", value: "male" },
   { label: "Female", value: "female" },

@@ -90,7 +90,6 @@ const EmployerRegistration = () => {
               type="email"
               id="email"
               disabled
-              // defaultValue={email}
               {...register("email")}
             />
           </div>

@@ -22,7 +22,6 @@ const Signup = () => {
 
   const password = useWatch({ control, name: "password" });
   const confirmPassword = useWatch({ control, name: "confirmPassword" });
-  // console.log(password, confirmPassword);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
