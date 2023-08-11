@@ -1,11 +1,15 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import meeting from "../assets/meeting.jpg";
 import { BsArrowRightShort, BsArrowReturnRight } from "react-icons/bs";
 import { useGetJobByIdQuery } from "../features/job/jobApi";
+import { useSelector } from "react-redux";
+import { toast } from "react-hot-toast";
 
 const JobDetails = () => {
   const { id } = useParams();
-  // console.log(id);
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state.auth);
+  // console.log(user);
 
   const { data } = useGetJobByIdQuery(id);
   // console.log(data);
@@ -28,6 +32,26 @@ const JobDetails = () => {
 
   const companyWebsite = "#";
 
+  const handleApply = () => {
+    if (user.role === "employer") {
+      toast.error("you need a candidate account to apply");
+      // toast.error("Cannot apply with a employer account");
+      return;
+    }
+
+    if (user.role === "") {
+      navigate("/register");
+      return;
+    }
+
+    const data = {
+      userId: user._id,
+      email: user.email,
+      jobId: _id,
+    };
+    console.log(data);
+  };
+
   return (
     <div className="pt-14 grid grid-cols-12 gap-5">
       <div className="col-span-9 mb-10">
@@ -38,7 +62,9 @@ const JobDetails = () => {
         <div className="space-y-5">
           <div className="flex justify-between items-center mt-5">
             <h1 className="text-xl font-semibold text-primary">{position}</h1>
-            <button className="btn">Apply</button>
+            <button onClick={handleApply} className="btn">
+              Apply
+            </button>
           </div>
 
           <div>
@@ -50,7 +76,7 @@ const JobDetails = () => {
             <h1 className="text-primary text-lg font-medium mb-3">Skills</h1>
             <ul>
               {skills?.map((skill) => (
-                <li className="flex items-center">
+                <li className="flex items-center" key={skill}>
                   <BsArrowRightShort /> <span>{skill}</span>
                 </li>
               ))}
@@ -63,7 +89,7 @@ const JobDetails = () => {
             </h1>
             <ul>
               {requirements?.map((skill) => (
-                <li className="flex items-center">
+                <li className="flex items-center" key={skill}>
                   <BsArrowRightShort /> <span>{skill}</span>
                 </li>
               ))}
@@ -76,7 +102,7 @@ const JobDetails = () => {
             </h1>
             <ul>
               {responsibilities?.map((skill) => (
-                <li className="flex items-center">
+                <li className="flex items-center" key={skill}>
                   <BsArrowRightShort /> <span>{skill}</span>
                 </li>
               ))}

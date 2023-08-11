@@ -99,15 +99,15 @@ const EmployerRegistration = () => {
             <h1 className="mb-3">Gender</h1>
             <div className="flex gap-3">
               {genderOption.map((option) => (
-                <div key={option}>
+                <div key={option.value}>
                   <input
                     type="radio"
-                    id={option}
+                    id={option.value}
                     {...register("gender")}
-                    value={option}
+                    value={option.value}
                   />
                   <label className="ml-2 text-lg" htmlFor="male">
-                    {option}
+                    {option.label}
                   </label>
                 </div>
               ))}
