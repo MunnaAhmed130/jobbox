@@ -21,7 +21,6 @@ const Login = () => {
   const onSubmit = (data) => {
     // console.log(data);
     dispatch(loginUser(data));
-    // reset();
   };
 
   const handleGoogleLogin = () => {
@@ -36,7 +35,8 @@ const Login = () => {
     if (email && !isError) {
       toast.success("Welcome to Jobbox", { id: "login" });
       reset();
-      role ? navigate("/dashboard") : navigate("/register");
+      navigate("/");
+      // role ? navigate("/dashboard") : navigate("/register");
     }
 
     if (isError) {
