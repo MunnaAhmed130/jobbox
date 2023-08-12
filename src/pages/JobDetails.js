@@ -1,51 +1,41 @@
 import { useNavigate, useParams } from "react-router-dom";
 import meeting from "../assets/meeting.jpg";
-import { BsArrowRightShort, BsArrowReturnRight } from "react-icons/bs";
+import { BsArrowRightShort } from "react-icons/bs";
 import { useApplyMutation, useGetJobByIdQuery } from "../features/job/jobApi";
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { useEffect } from "react";
+import DetailsSidebar from "../components/jobDetails/DetailsSidebar";
+import GeneralQanA from "../components/jobDetails/GeneralQanA";
 
 const JobDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const { user } = useSelector((state) => state.auth);
-  const { data } = useGetJobByIdQuery(id);
-  const [apply, { isLoading, isSuccess, isError, error }] = useApplyMutation();
+  const { data } = useGetJobByIdQuery(id, { pollingInterval: 1000 });
+  const [apply, applyState] = useApplyMutation();
+
+  const applicant = data?.data?.applicants.filter(
+    (applicant) => applicant.id === user._id
+  );
 
   useEffect(() => {
-    isLoading && toast.loading("Applying ...", { id: "applyToJob" });
+    applyState.isLoading && toast.loading("Applying ...", { id: "applyToJob" });
 
-    if (isSuccess) {
+    if (applyState.isSuccess) {
       toast.success("Successfully applied", { id: "applyToJob" });
     }
 
-    isError && toast.error(error, { id: "applyToJob" });
-  }, [isLoading, isError, isSuccess, error]);
+    applyState.isError && toast.error(applyState.error, { id: "applyToJob" });
+  }, [applyState]);
 
-  const {
-    companyName,
-    position,
-    location,
-    experience,
-    workLevel,
-    employmentType,
-    salaryRange,
-    skills,
-    requirements,
-    responsibilities,
-    overview,
-    queries,
-    _id,
-  } = data?.data || {};
-
-  const companyWebsite = "#";
+  const { position, skills, requirements, responsibilities, overview, _id } =
+    data?.data || {};
 
   const handleApply = () => {
     if (user.role === "employer") {
       toast.error("you need a candidate account to apply");
-      // toast.error("Cannot apply with a employer account");
       return;
     }
 
@@ -54,14 +44,17 @@ const JobDetails = () => {
       return;
     }
 
-    const data = {
+    const applyData = {
       userId: user._id,
       email: user.email,
       jobId: _id,
     };
-    console.log(data);
-    apply(data);
+
+    apply(applyData);
+    console.log(applyData);
   };
+
+  // console.log(applicant?.length);
 
   return (
     <div className="pt-14 grid grid-cols-12 gap-5">
@@ -73,8 +66,13 @@ const JobDetails = () => {
         <div className="space-y-5">
           <div className="flex justify-between items-center mt-5">
             <h1 className="text-xl font-semibold text-primary">{position}</h1>
-            <button onClick={handleApply} className="btn">
-              Apply
+
+            <button
+              onClick={handleApply}
+              disabled={applicant?.length}
+              className="btn "
+            >
+              {applicant?.length ? "Applied" : "Apply"}
             </button>
           </div>
 
@@ -122,113 +120,9 @@ const JobDetails = () => {
         </div>
 
         <hr className="my-5" />
-
-        <div>
-          <div>
-            <h1 className="text-xl font-semibold text-primary mb-5">
-              General Q&A
-            </h1>
-            <div className="text-primary my-2">
-              {queries?.map(({ question, email, reply, id }) => (
-                <div>
-                  <small>{email}</small>
-                  <p className="text-lg font-medium">{question}</p>
-                  {reply?.map((item) => (
-                    <p className="flex items-center gap-2 relative left-5">
-                      <BsArrowReturnRight /> {item}
-                    </p>
-                  ))}
-
-                  <div className="flex gap-3 my-5">
-                    <input placeholder="Reply" type="text" className="w-full" />
-                    <button
-                      className="shrink-0 h-14 w-14 bg-primary/10 border border-primary hover:bg-primary rounded-full transition-all  grid place-items-center text-primary hover:text-white"
-                      type="button"
-                    >
-                      <BsArrowRightShort size={30} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="flex gap-3 my-5">
-              <input
-                placeholder="Ask a question..."
-                type="text"
-                className="w-full"
-              />
-              <button
-                className="shrink-0 h-14 w-14 bg-primary/10 border border-primary hover:bg-primary rounded-full transition-all  grid place-items-center text-primary hover:text-white"
-                type="button"
-              >
-                <BsArrowRightShort size={30} />
-              </button>
-            </div>
-          </div>
-        </div>
+        <GeneralQanA user={user} data={data} />
       </div>
-      <div className="col-span-3">
-        <div className="rounded-xl bg-primary/10 p-5 text-primary space-y-5">
-          <div>
-            <p>Experience</p>
-            <h1 className="font-semibold text-lg">{experience}</h1>
-          </div>
-
-          <div>
-            <p>Work Level</p>
-            <h1 className="font-semibold text-lg">{workLevel}</h1>
-          </div>
-
-          <div>
-            <p>Employment Type</p>
-            <h1 className="font-semibold text-lg">{employmentType}</h1>
-          </div>
-
-          <div>
-            <p>Salary Range</p>
-            <h1 className="font-semibold text-lg">{salaryRange}</h1>
-          </div>
-
-          <div>
-            <p>Location</p>
-            <h1 className="font-semibold text-lg">{location}</h1>
-          </div>
-        </div>
-
-        <div className="mt-5 rounded-xl bg-primary/10 p-5 text-primary space-y-5">
-          <div>
-            <h1 className="font-semibold text-lg">{companyName}</h1>
-          </div>
-
-          <div>
-            <p>Company Size</p>
-            <h1 className="font-semibold text-lg">Above 100</h1>
-          </div>
-
-          <div>
-            <p>Founded</p>
-            <h1 className="font-semibold text-lg">2001</h1>
-          </div>
-
-          <div>
-            <p>Email</p>
-            <h1 className="font-semibold text-lg">company.email@name.com</h1>
-          </div>
-
-          <div>
-            <p>Company Location</p>
-            <h1 className="font-semibold text-lg">Los Angeles</h1>
-          </div>
-
-          <div>
-            <p>Website</p>
-            <a className="font-semibold text-lg" href={companyWebsite}>
-              https://website.com
-            </a>
-          </div>
-        </div>
-      </div>
+      <DetailsSidebar data={data} />
     </div>
   );
 };
