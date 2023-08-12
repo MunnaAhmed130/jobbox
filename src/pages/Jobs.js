@@ -11,7 +11,7 @@ const Jobs = () => {
       <div className="bg-primary/10 p-5 rounded-2xl">
         <h1 className="font-semibold text-xl">Find Jobs</h1>
       </div>
-      <div className="grid grid-cols-2 gap-5 mt-5">
+      <div className="grid lg:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-5 mt-5">
         {data?.data.map((jobData) => (
           <JobCard jobData={jobData} key={jobData._id} />
         ))}

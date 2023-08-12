@@ -11,14 +11,14 @@ const Sidebar = () => {
   const candidateRoutes = [{ name: "Applied jobs", path: "applied-jobs" }];
 
   return (
-    <div className="bg-primary/10 col-span-2 h-screen sticky top-0">
-      <ul className="flex flex-col gap-2 w-full h-full  p-3">
+    <div className="bg-primary/10 xl:col-span-2 lg:col-span-3 col-span-4 h-screen sticky top-0 ">
+      <ul className="flex flex-col gap-2 w-full h-full  p-3 ">
         <div className="flex justify-between items-center text-primary my-1">
           <Link to="/" className="flex items-center">
             <FaChevronLeft />
             <h1>Back</h1>
           </Link>
-          <h1 className="text-xl">Dashboard</h1>
+          <h1 className="2xl:text-xl xl:text-lg lg:text-base">Dashboard</h1>
         </div>
 
         {role === "employer" &&
