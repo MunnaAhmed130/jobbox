@@ -7,72 +7,71 @@ import auth from "../../firebase/firebase.config";
 
 const Navbar = () => {
   const { pathname } = useLocation();
-  const dispatch = useDispatch();
-  // const { user } = useSelector((state) => state.auth);
   const { email, role } = useSelector((state) => state.auth.user);
-  // console.log(user);
-  // console.log(role);
 
+  const dispatch = useDispatch();
   const handleSignOut = () => {
     signOut(auth).then(() => dispatch(logout()));
   };
 
   return (
     <nav
-      className={`h-14 fixed w-full z-[999] ${
+      className={`h-14  fixed w-full flex z-[999] ${
         pathname === "/" ? null : "bg-white"
       }`}
     >
-      <ul className="max-w-7xl mx-auto flex gap-3 h-full items-center">
-        <li className="flex-auto font-semibold text-2xl">
-          <Link to="/">JobBox</Link>
-        </li>
-        <li>
-          <Link className="hover:text-primary" to="/jobs">
-            Jobs
-          </Link>
-        </li>
-
-        {email ? (
-          <button
-            onClick={handleSignOut}
-            className=" px-2 py-1 rounded-full hover:border-primary hover:text-white hover:bg-primary hover:px-4 transition-all"
-          >
-            LogOut
-          </button>
-        ) : (
+      <div className="mx-10 w-full">
+        <ul className="max-w-7xl w-full mx-auto flex gap-3 h-full items-center">
+          <li className="flex-auto font-semibold text-2xl">
+            <Link to="/">JobBox</Link>
+          </li>
           <li>
-            <Link
-              className="border border-black px-2 py-1 rounded-full hover:border-primary hover:text-white hover:bg-primary hover:px-4 transition-all "
-              to="/login"
-            >
-              Login
+            <Link className="hover:text-primary" to="/jobs">
+              Jobs
             </Link>
           </li>
-        )}
 
-        {!role && email && (
-          <li>
-            <Link
-              className="border border-black px-3 py-1 rounded-full hover:border-primary hover:text-white hover:bg-primary hover:px-4 transition-all "
-              to="/register"
+          {email ? (
+            <button
+              onClick={handleSignOut}
+              className=" px-2 py-1 rounded-full hover:border-primary hover:text-white hover:bg-primary hover:px-4 transition-all"
             >
-              Get started
-            </Link>
-          </li>
-        )}
+              LogOut
+            </button>
+          ) : (
+            <li>
+              <Link
+                className="border border-black px-2 py-1 rounded-full hover:border-primary hover:text-white hover:bg-primary hover:px-4 transition-all "
+                to="/login"
+              >
+                Login
+              </Link>
+            </li>
+          )}
 
-        {email && role && (
-          <li>
-            <Link
-              className="border border-black px-3 py-1 rounded-full hover:border-primary hover:text-white hover:bg-primary hover:px-4 transition-all "
-              to="/dashboard"
-            >
-              Dashboard
-            </Link>
-          </li>
-        )}
-      </ul>
+          {!role && email && (
+            <li>
+              <Link
+                className="border border-black px-3 py-1 rounded-full hover:border-primary hover:text-white hover:bg-primary hover:px-4 transition-all "
+                to="/register"
+              >
+                Get started
+              </Link>
+            </li>
+          )}
+
+          {email && role && (
+            <li>
+              <Link
+                className="border border-black px-3 py-1 rounded-full hover:border-primary hover:text-white hover:bg-primary hover:px-4 transition-all "
+                to="/dashboard"
+              >
+                Dashboard
+              </Link>
+            </li>
+          )}
+        </ul>
+      </div>
     </nav>
   );
 };
