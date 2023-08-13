@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 
 const GeneralQanA = ({ user, data }) => {
   const { queries, _id } = data?.data || {};
+
   const { register, handleSubmit, reset } = useForm();
   const [reply, setReply] = useState("");
 
@@ -70,7 +71,6 @@ const GeneralQanA = ({ user, data }) => {
                   <BsArrowReturnRight /> {item}
                 </p>
               ))}
-
               {user.role === "employer" && (
                 <div className="flex gap-3 my-5">
                   <input
@@ -90,6 +90,12 @@ const GeneralQanA = ({ user, data }) => {
               )}
             </div>
           ))}
+
+          {!queries?.length && (
+            <div className="bg-primary/10 py-7 text-center rounded">
+              <p>No Questions Posted ...</p>
+            </div>
+          )}
         </div>
 
         {user.role === "candidate" && (
