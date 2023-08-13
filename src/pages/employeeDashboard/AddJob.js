@@ -10,8 +10,7 @@ const AddJob = () => {
     user: { companyName, _id },
   } = useSelector((state) => state.auth);
 
-  const [postJob, { isLoading, isSuccess, isError, error }] =
-    usePostJobMutation();
+  const [postJob, postJobState] = usePostJobMutation();
 
   const { handleSubmit, register, control, reset } = useForm({
     defaultValues: {
@@ -20,15 +19,16 @@ const AddJob = () => {
   });
 
   useEffect(() => {
-    isLoading && toast.loading("Posting job ...", { id: "addJob" });
+    postJobState.isLoading &&
+      toast.loading("Posting job ...", { id: "addJob" });
 
-    if (isSuccess) {
+    if (postJobState.isSuccess) {
       toast.success("Job post complete", { id: "addJob" });
       reset();
     }
 
-    isError && toast.error(error, { id: "addJob" });
-  }, [isLoading, isError, isSuccess]);
+    postJobState.isError && toast.error(postJobState.error, { id: "addJob" });
+  }, [postJobState]);
 
   const {
     fields: resFields,
@@ -49,8 +49,14 @@ const AddJob = () => {
   } = useFieldArray({ control, name: "requirements" });
 
   const onSubmit = (data) => {
-    const jobAppData = { ...data, companyId: _id, applicants: [], queries: [] };
-    console.log(data, jobAppData);
+    const jobAppData = {
+      ...data,
+      companyId: _id,
+      applicants: [],
+      queries: [],
+      openStatus: true,
+    };
+
     postJob(jobAppData);
   };
 
