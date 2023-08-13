@@ -105,7 +105,7 @@ const EmployerRegistration = () => {
                     {...register("gender")}
                     value={option.value}
                   />
-                  <label className="ml-2 text-lg" htmlFor="male">
+                  <label className="ml-2 text-lg" htmlFor={option.value}>
                     {option.label}
                   </label>
                 </div>
