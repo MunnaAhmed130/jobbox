@@ -16,9 +16,14 @@ const JobDetails = () => {
   const { data } = useGetJobByIdQuery(id, { pollingInterval: 1000 });
   const [apply, applyState] = useApplyMutation();
 
-  const applicant = data?.data?.applicants.filter(
+  // console.log(data);
+
+  const AlreadyApplied = data?.data?.applicants.filter(
     (applicant) => applicant.id === user._id
   );
+
+  const applicants = data?.data?.applicants.length;
+  console.log(applicants);
 
   useEffect(() => {
     applyState.isLoading && toast.loading("Applying ...", { id: "applyToJob" });
@@ -66,14 +71,22 @@ const JobDetails = () => {
         <div className="space-y-5">
           <div className="flex justify-between items-center mt-5">
             <h1 className="text-xl font-semibold text-primary">{position}</h1>
+            {user.role === "candidate" && (
+              <button
+                onClick={handleApply}
+                disabled={AlreadyApplied?.length}
+                className="btn "
+              >
+                {AlreadyApplied?.length ? "Applied" : "Apply"}
+              </button>
+            )}
 
-            <button
-              onClick={handleApply}
-              disabled={applicant?.length}
-              className="btn "
-            >
-              {applicant?.length ? "Applied" : "Apply"}
-            </button>
+            {user.role === "employer" && (
+              <p className="border rounded-full py-1 px-5 bg-primary/10 text-primary font-semibold">
+                Number of applicants -{" "}
+                <span className="text-primary">{applicants}</span>
+              </p>
+            )}
           </div>
 
           <div>
