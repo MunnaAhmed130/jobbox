@@ -1,12 +1,16 @@
-import { useNavigate, useParams } from "react-router-dom";
-import meeting from "../assets/meeting.jpg";
-import { BsArrowRightShort } from "react-icons/bs";
-import { useApplyMutation, useGetJobByIdQuery } from "../features/job/jobApi";
-import { useSelector } from "react-redux";
-import { toast } from "react-hot-toast";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import meeting from "../assets/meeting.jpg";
+import {
+  useApplyMutation,
+  useGetJobByIdQuery,
+  useStatusMutation,
+} from "../features/job/jobApi";
 import DetailsSidebar from "../components/jobDetails/DetailsSidebar";
 import GeneralQanA from "../components/jobDetails/GeneralQanA";
+import List from "../components/jobDetails/List";
 
 const JobDetails = () => {
   const { id } = useParams();
@@ -14,16 +18,14 @@ const JobDetails = () => {
 
   const { user } = useSelector((state) => state.auth);
   const { data } = useGetJobByIdQuery(id, { pollingInterval: 1000 });
+
+  const [status, statusState] = useStatusMutation();
   const [apply, applyState] = useApplyMutation();
 
-  // console.log(data);
+  const { applicants, openStatus } = data?.data || {};
 
-  const AlreadyApplied = data?.data?.applicants.filter(
-    (applicant) => applicant.id === user._id
-  );
-
-  const applicants = data?.data?.applicants.length;
-  console.log(applicants);
+  const AlreadyApplied =
+    applicants && applicants.filter((applicant) => applicant.id === user._id);
 
   useEffect(() => {
     applyState.isLoading && toast.loading("Applying ...", { id: "applyToJob" });
@@ -34,6 +36,13 @@ const JobDetails = () => {
 
     applyState.isError && toast.error(applyState.error, { id: "applyToJob" });
   }, [applyState]);
+
+  useEffect(() => {
+    statusState.isSuccess &&
+      toast.success(`Job is ${openStatus ? "close" : "open"} to applicants`, {
+        id: "status",
+      });
+  }, [statusState]);
 
   const { position, skills, requirements, responsibilities, overview, _id } =
     data?.data || {};
@@ -56,10 +65,7 @@ const JobDetails = () => {
     };
 
     apply(applyData);
-    console.log(applyData);
   };
-
-  // console.log(applicant?.length);
 
   return (
     <div className="pt-14 grid grid-cols-12 gap-5">
@@ -70,8 +76,15 @@ const JobDetails = () => {
 
         <div className="space-y-5">
           <div className="flex justify-between items-center mt-5">
-            <h1 className="text-xl font-semibold text-primary">{position}</h1>
-            {user.role === "candidate" && (
+            <div>
+              <h1 className="text-xl font-semibold text-primary inline-block">
+                {position}
+              </h1>
+              <span className="border rounded-full py-1.5 px-4 ml-4">
+                {openStatus ? "Open for application" : "Closed"}
+              </span>
+            </div>
+            {user.role === "candidate" && openStatus && (
               <button
                 onClick={handleApply}
                 disabled={AlreadyApplied?.length}
@@ -82,10 +95,18 @@ const JobDetails = () => {
             )}
 
             {user.role === "employer" && (
-              <p className="border rounded-full py-1 px-5 bg-primary/10 text-primary font-semibold">
-                Number of applicants -{" "}
-                <span className="text-primary">{applicants}</span>
-              </p>
+              <div className="">
+                <p className="border rounded-full py-1 px-5 bg-primary/10 text-primary font-semibold inline-block mr-5">
+                  Number of applicants - {applicants.length}
+                </p>
+                <button
+                  onClick={() => status({ id })}
+                  className="btn"
+                  disabled={statusState.isLoading}
+                >
+                  {openStatus ? "Close" : "Open"} Position
+                </button>
+              </div>
             )}
           </div>
 
@@ -98,9 +119,7 @@ const JobDetails = () => {
             <h1 className="text-primary text-lg font-medium mb-3">Skills</h1>
             <ul>
               {skills?.map((skill) => (
-                <li className="flex items-center" key={skill}>
-                  <BsArrowRightShort /> <span>{skill}</span>
-                </li>
+                <List skill={skill} />
               ))}
             </ul>
           </div>
@@ -111,9 +130,7 @@ const JobDetails = () => {
             </h1>
             <ul>
               {requirements?.map((skill) => (
-                <li className="flex items-center" key={skill}>
-                  <BsArrowRightShort /> <span>{skill}</span>
-                </li>
+                <List skill={skill} />
               ))}
             </ul>
           </div>
@@ -124,15 +141,14 @@ const JobDetails = () => {
             </h1>
             <ul>
               {responsibilities?.map((skill) => (
-                <li className="flex items-center" key={skill}>
-                  <BsArrowRightShort /> <span>{skill}</span>
-                </li>
+                <List skill={skill} />
               ))}
             </ul>
           </div>
         </div>
 
         <hr className="my-5" />
+
         <GeneralQanA user={user} data={data} />
       </div>
       <DetailsSidebar data={data} />
