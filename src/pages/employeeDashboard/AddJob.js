@@ -7,7 +7,7 @@ import { toast } from "react-hot-toast";
 
 const AddJob = () => {
   const {
-    user: { companyName },
+    user: { companyName, _id },
   } = useSelector((state) => state.auth);
 
   const [postJob, { isLoading, isSuccess, isError, error }] =
@@ -49,8 +49,9 @@ const AddJob = () => {
   } = useFieldArray({ control, name: "requirements" });
 
   const onSubmit = (data) => {
-    console.log(data);
-    postJob({ ...data, applicants: [], queries: [] });
+    const jobAppData = { ...data, companyId: _id, applicants: [], queries: [] };
+    console.log(data, jobAppData);
+    postJob(jobAppData);
   };
 
   return (
