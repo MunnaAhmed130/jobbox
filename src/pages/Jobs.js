@@ -1,21 +1,18 @@
-import { useEffect, useState } from "react";
 import JobCard from "../components/reusable/JobCard";
 import { useGetJobsQuery } from "../features/job/jobApi";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Jobs = () => {
-  const { data, isSuccess } = useGetJobsQuery();
-
   const {
     user: { _id },
   } = useSelector((state) => state.auth);
 
   const { pathname } = useLocation();
+  const { data, isSuccess } = useGetJobsQuery(_id, { pollingInterval: 1000 });
 
   const postedJobs = data?.data?.filter((company) => company.companyId === _id);
 
-  // console.log(data);
   return (
     <div className="pt-14">
       <div className="bg-primary/10 p-5 rounded-2xl">
