@@ -10,8 +10,8 @@ const Main = () => {
       <Navbar />
       <div
         className={` ${
-          pathname === "/" ? "max-w-[1600px] px-5" : "max-w-7xl mx-5"
-        } max-w-[1600px] mx-auto`}
+          pathname === "/" ? "max-w-[1600px]" : "max-w-7xl"
+        } max-w-[1600px] mx-auto px-5`}
       >
         <Outlet />
       </div>
